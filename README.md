@@ -1,6 +1,6 @@
 # LiveChat
 
-LiveChat is a clone of the chat feature from Twitch 👾
+LiveChat is a clone of the chat feature from [Twitch](https://www.twitch.tv/) or [Discord](https://discord.com/) 👾
 
 The goal is to learn [Django](https://www.djangoproject.com/) (backend w/ [API](https://www.django-rest-framework.org/)) as well as [React](https://reactjs.org/) (frontend, possibly done with [Figma](https://www.figma.com/)).
 
