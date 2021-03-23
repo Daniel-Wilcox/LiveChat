@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Added
+    'myUsers',
     'api',
+
     'rest_framework',
     'channels',
     'ChatRooms',
@@ -129,7 +131,7 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 MEDIA_URL = '/images/'
 
-AUTH_USER_MODEL = 'api.UserProfile'
+AUTH_USER_MODEL = 'myUsers.UserProfile'
 
 
 # WS Stuff
