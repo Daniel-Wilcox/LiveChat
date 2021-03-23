@@ -7,6 +7,8 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import UserManager
 import datetime
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 # Create your models here.
@@ -78,9 +80,14 @@ class CustomUserManager(BaseUserManager):
 #         return self.create_base_user(username, email, date_of_birth, password, **extra_fields)
 
 
-def user_directory_path(instance, filename):
+def user_icon_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'user_{0}/{1}'.format(instance.user.id, filename)
+    return 'icons/{0}/'.format(filename)
+
+
+def user_banner_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'banners/{0}/'.format(filename)
 
 
 def generate_unique_code():
@@ -127,15 +134,9 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     user_icon = models.ImageField(
         _('User icon'),
-        upload_to=user_directory_path,
+        upload_to=user_icon_path,
         default='default_user.png',
     )
-
-    # user_banner = models.ImageField(
-    #     _('User banner'),
-    #     upload_to=user_directory_path,
-    #     default='default_user.png',
-    # )
 
     is_hosting = models.BooleanField(default=False)  # hosting a chatroom
     is_online = models.BooleanField(default=False)
