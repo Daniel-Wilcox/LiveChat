@@ -2,7 +2,7 @@ from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import UserManager
@@ -11,40 +11,71 @@ import datetime
 
 # Create your models here.
 
+class CustomUserManager(BaseUserManager):
 
-class UserManager(BaseUserManager):
-    use_in_migrations = True
-
-    def _create_user(self, email, password, **extra_fields):
-        """
-        Creates and saves a User with the given email and password.
-        """
+    def create_user(self, username, email, date_of_birth, password, **extra_fields):
+        if not username:
+            raise ValueError(_('A username must be provided'))
         if not email:
-            raise ValueError('The given email must be set')
+            raise ValueError(_('An email must be provided'))
+        if not date_of_birth:
+            raise ValueError(_('A date of birth must be provided: YYYY-mm-dd'))
+
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        user = self.model(username=username, email=email,
+                          date_of_birth=date_of_birth, **extra_fields)
         user.set_password(password)
-        user.save(using=self._db)
+        user.save()
         return user
 
-    def create_user(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_active', False)
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, **extra_fields)
-
-    def create_superuser(self, email, password, **extra_fields):
-
-        s_user_date = datetime.datetime(1900, 1, 1).strftime("%Y-%m-%d")
-        extra_fields.setdefault('is_active', False)
+    def create_superuser(self, username, email, date_of_birth, password, **extra_fields):
+        extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('date_of_birth', s_user_date)
 
+        if extra_fields.get('is_active') is not True:
+            raise ValueError('Superuser must be assigned is_active=True')
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must be assigned is_staff=True')
         if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
+            raise ValueError('Superuser must be assigned is_superuser=True')
 
-        return self._create_user(email, password, **extra_fields)
+        return self.create_user(username, email, date_of_birth, password, **extra_fields)
+
+# class CustomUserManager(BaseUserManager):
+#     use_in_migrations = True
+
+#     def create_base_user(self, username, email, date_of_birth, password, **extra_fields):
+
+#         if not username:
+#             raise ValueError(_('An username must be provided'))
+#         if not email:
+#             raise ValueError(_('An email address must be provided'))
+
+#         email = self.normalize_email(email)
+#         user = self.model(email=email, **extra_fields)
+#         user.set_password(password)
+#         user.save()
+#         return user
+
+#     def create_user(self, username, email, date_of_birth, password, **extra_fields):
+#         extra_fields.setdefault('is_active', False)
+#         extra_fields.setdefault('is_staff', False)
+#         extra_fields.setdefault('is_superuser', False)
+#         return self.create_base_user(username, email, password, **extra_fields)
+
+#     def create_superuser(self, username, email, date_of_birth, password, **extra_fields):
+
+#         extra_fields.setdefault('is_active', True)
+#         extra_fields.setdefault('is_staff', True)
+#         extra_fields.setdefault('is_superuser', True)
+
+#         if extra_fields.get('is_superuser') is not True:
+#             raise ValueError('Superuser must have is_superuser=True.')
+#         if extra_fields.get('is_staff') is not True:
+#             raise ValueError('Superuser must have is_staff=True.')
+
+#         return self.create_base_user(username, email, date_of_birth, password, **extra_fields)
 
 
 def user_directory_path(instance, filename):
@@ -74,43 +105,52 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     )
 
     email = models.EmailField(
-        verbose_name='email address',
+        _('email address'),
         unique=True,
     )
 
     date_of_birth = models.DateField(
-        verbose_name='Date of birth',
+        _('Date of birth'),
     )
 
     date_joined = models.DateTimeField(
-        verbose_name='Date joined',
+        _('Date joined'),
         default=timezone.now,
     )
 
     user_bio = models.CharField(
-        verbose_name='User Bio',
+        _('User Bio'),
         max_length=300,
         default='',
         blank=True,
     )
 
     user_icon = models.ImageField(
-        verbose_name='User icon',
+        _('User icon'),
         upload_to=user_directory_path,
         default='default_user.png',
     )
 
-    is_active = models.BooleanField(default=False)  # online
+    # user_banner = models.ImageField(
+    #     _('User banner'),
+    #     upload_to=user_directory_path,
+    #     default='default_user.png',
+    # )
+
     is_hosting = models.BooleanField(default=False)  # hosting a chatroom
+    is_online = models.BooleanField(default=False)
+
+    # Django default user fields
     is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)  # activated i.e. verified
     is_superuser = models.BooleanField(default=False)
     last_login = models.DateTimeField(null=True, blank=True)
 
-    objects = UserManager()
+    objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['email']
+    REQUIRED_FIELDS = ['email', 'date_of_birth']
 
     class Meta:
         verbose_name = ('user')
