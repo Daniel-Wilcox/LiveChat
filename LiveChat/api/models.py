@@ -127,9 +127,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
 
-    def email_user(self, subject, message, from_email=None):
-        send_mail(subject, message, from_email, [self.email])
-
 
 class UserFollow(models.Model):
     user_following = models.ForeignKey(

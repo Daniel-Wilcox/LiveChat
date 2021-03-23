@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     # Added
     'api',
     'rest_framework',
+    'channels',
+    'ChatRooms',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +130,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '/static/images')
 MEDIA_URL = '/images/'
 
 AUTH_USER_MODEL = 'api.UserProfile'
+
+
+# WS Stuff
+ASGI_APPLICATION = 'LiveChat.routing.applications'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    }
+}
