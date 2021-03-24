@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'api',
 
     'rest_framework',
+    'rest_framework.authtoken',
     'channels',
     'ChatRooms',
 
@@ -78,6 +79,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'LiveChat.wsgi.application'
 
@@ -146,6 +148,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'users.serializers.UserSerializer',
 }
 
 # WS Stuff

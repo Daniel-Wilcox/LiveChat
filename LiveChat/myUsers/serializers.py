@@ -8,8 +8,16 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('id', 'username', 'email', 'date_of_birth',
-                  'date_joined', 'is_active', 'is_hosting')
+        fields = ['id', 'username', 'email', 'date_of_birth',
+                  'date_joined', 'is_active', 'is_hosting']
+
+
+class UserProfilePageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserProfile
+        fields = ['username', 'user_icon', 'user_bio',
+                  'date_joined', 'is_active', 'is_hosting']
 
 
 class CreateUserSerializer(serializers.ModelSerializer):

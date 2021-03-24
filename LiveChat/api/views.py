@@ -1,50 +1,50 @@
 from django.shortcuts import render
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+from myUsers.permission import PublicViewPermissions
+
 
 # Users
-from myUsers.serializers import UserProfileSerializer, CreateUserSerializer
+from myUsers.serializers import UserProfileSerializer, CreateUserSerializer, UserProfilePageSerializer
 from myUsers.models import UserProfile
 
 
 # Create your views here.
+
+
+# Read only permissions
+
+
+# GET request to get all user's basic info ('username', 'user_bio', 'date_joined', 'is_active', 'is_hosting')
+@api_view(['GET', ])
+@permission_classes([PublicViewPermissions])
+def GetPublicUserProfile(request, userPage):
+    # userPage variable must have the same name as /api/<str:userPage>
+
+    try:
+        userPage = UserProfile.objects.get(username=userPage)
+    except:
+        return Response({"user not found": "invalid username"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'GET':
+        serializer_class = UserProfilePageSerializer(userPage)
+        return Response(serializer_class.data, status=status.HTTP_200_OK)
+    return Response({"bad request method": "only get request method"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserProfileView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
 
-class CreateUserView(APIView):
-    pass
-#     serializer_class = CreateUserSerializer
-
-#     def post(self, request, format=None):
-#         if not self.request.session.exists(self.request.session.session_key):
-#             self.request.session.create()
-
-#         serializer = self.serializer_class(data=request.data)
-#         if serializer.is_valid():
-#             username = serializer.data.get('username')
-#             email = serializer.data.get('email')
-#             date_of_birth = serializer.data.get('date_of_birth')
-#             user_bio = serializer.data.get('user_bio')
-
-#             # Check if user exists
-#             queryset = UserProfile.objects.filter(username=username)
-#             if queryset.exists():
-#                 return Response({'Bad Request': 'Username is already taken.'}, status=status.HTTP_400_BAD_REQUEST)
-
-#             # Check if email exists
-#             queryset = UserProfile.objects.filter(email=email)
-#             if queryset.exists():
-#                 return Response({'Bad Request': 'Email is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
-#             else:
-#                 user = UserProfile(username=username, email=email,
-#                                    date_of_birth=date_of_birth, user_bio=user_bio)
-#                 user.save()
-#                 return Response(UserProfileSerializer(user).data, status=status.HTTP_201_CREATED)
-
-#         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
+class UserProfileView2(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
