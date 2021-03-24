@@ -12,7 +12,6 @@ from myUsers.models import UserProfile
 
 # Create your views here.
 
-
 class UserProfileView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer

@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'channels',
     'ChatRooms',
+
+    # REACT Frontend
+    'frontend',
 ]
 
 MIDDLEWARE = [
@@ -133,6 +136,17 @@ MEDIA_URL = '/images/'
 
 AUTH_USER_MODEL = 'myUsers.UserProfile'
 
+
+# REST API stuff
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
 
 # WS Stuff
 ASGI_APPLICATION = 'LiveChat.routing.applications'
