@@ -6,7 +6,7 @@ from django.http import JsonResponse
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from myUsers.permission import PublicViewPermissions
 
 
@@ -19,6 +19,11 @@ from myUsers.models import UserProfile
 
 
 # Read only permissions
+
+# @api_view(['request.method', ])
+# @permission_classes([PublicViewPermissions, PublicViewPermissions])
+# @authentication_classes([TokenAuthentication, ])
+# def name_of_functional_view(request, URL_ID_NAME):
 
 
 # GET request to get all user's basic info ('username', 'user_bio', 'date_joined', 'is_active', 'is_hosting')
