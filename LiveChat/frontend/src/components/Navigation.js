@@ -7,10 +7,6 @@ import { useHistory} from 'react-router-dom'
 // import { BrowserRouter as Router, Switch, Route, Link, useHistory, useParams, Redirect } from 'react-router-dom'
 
 import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap'
-// import userProfilePage from './userProfilePage';
-
-
-// import HomePage from './HomePage'
 
 
 
@@ -18,8 +14,6 @@ import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap'
 const Navigation = () => {
 
     const history = useHistory();
-
-
     const [username, setUsername] = useState("");
 
 
@@ -61,12 +55,6 @@ const Navigation = () => {
                 </Form>
 
             </Navbar>
-
-            {/* <Switch>
-                <Route exact path="/" component={HomePage} />
-                <Route path="/:username" component={userProfilePage} />
-
-            </Switch> */}
 
         </>
         
