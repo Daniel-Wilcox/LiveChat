@@ -7,6 +7,10 @@ const aboutPage = () => {
     return (
         <div>
             <Navigation />
+            <br />
+            <br />
+            <br />
+
             <h3>This is the about page.</h3>
             <h4>Version 0.0.1</h4>
             <Link to='/'>Home</Link>

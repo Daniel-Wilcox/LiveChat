@@ -1,15 +1,10 @@
-import {useState} from 'react'
-import { Button, Modal, Form } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css'
-import {Link} from 'react-router-dom'
+import {useState} from 'react';
+import {Button, Modal, Form } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Link} from 'react-router-dom';
+// import {axios} from 'axios';
 
 function SignUp() {
-
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    today = yyyy + "-" + mm + '-' + dd;
     
 
     const [show, setShow] = useState(false);
@@ -19,30 +14,22 @@ function SignUp() {
     const [username, setUsername] = useState("");
     const [pass1, setPass1] = useState("");
     const [pass2, setPass2] = useState("");
-    const [date_of_birth, setDateOfBirth] = useState(today);
+    const [date_of_birth, setDateOfBirth] = useState("");
     const [email, setEmail] = useState("");
 
-    const [check1, setCheck] = useState(false);
+    const [validated, setValidated] = useState(false);
 
 
 
     const handleSubmit = (e) => {
 
-
-        console.log(username)
-        console.log(pass1)
-        console.log(pass2)
-        console.log(date_of_birth)
-        console.log(email)
-
-
-        
-        // e.preventDefault()
-        // const formData = new FormData(e.target),
-        //     formDataObj = Object.fromEntries(formData.entries())
-        // console.log(formDataObj)
+        console.log(e.currentTarget);
+        setTimeout(function() {console.log(e.currentTarget)}, 1000);
+        setValidated(true);
 
     };
+
+
 
 
     return (
@@ -55,7 +42,7 @@ function SignUp() {
                 </Modal.Header>
 
                 <Modal.Body>
-                    <Form onSubmit={handleSubmit}>
+                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
 
                         {/* Username Form Input */}
                         <Form.Group controlId="formUsername">
@@ -129,8 +116,6 @@ function SignUp() {
                                 type="checkbox"
                                 label="Confirm above information"
                                 feedback="You must agree before completing the sign up form."
-                                value={check1}
-                                onChange={(e) => {setCheck(e.target.value)}}
                             />
                             <Form.Text className="text-muted">
                                 By clicking Sign Up, you are indicating that you have read and acknowledge the <Link to='p/tos'>Terms of Service</Link> and <Link to='p/Privacy'>Privacy Notice</Link>.

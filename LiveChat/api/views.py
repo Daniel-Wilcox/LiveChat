@@ -43,6 +43,28 @@ def GetPublicUserProfile(request, userPage):
     return Response({"bad request method": "only get request method"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET', ])
+@permission_classes([PublicViewPermissions])
+def CheckUserEmailExists(request, userEmail):
+
+    try:
+        userEmail.index("@")
+        emailRegex = r'({0})(\.[a-zA-Z]{{2,3}}){{1,2}}'.format(userEmail)
+
+        try:
+            userEmail = UserProfile.objects.get(email__regex=emailRegex)
+            return Response({"Email_free": False}, status=status.HTTP_400_BAD_REQUEST)
+
+        except:
+            return Response({"Email_free": True}, status=status.HTTP_200_OK)
+
+    except:
+        return Response({"Email format is not valid": "Bad formatting"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method != 'GET':
+        return Response({"bad request method": "only get request method"}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class UserProfileView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer

@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom'
 import HomePage from './components/HomePage'
 import aboutPage from './components/aboutPage'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import UserProfilePage from './components/UserProfilePage';
 
 
 function App() {
@@ -11,8 +12,9 @@ function App() {
   return (
     <div className="container">
         <Router>
-            <Route path='/' exact render = {HomePage} />
-            <Route path='/about' render = {aboutPage} />
+            <Route exact path="/" render = {HomePage} />
+            <Route exact path="/en/about" render = {aboutPage} />
+            <Route exact path="/:username" render={UserProfilePage} />
         </Router>
     </div>
   );
