@@ -1,8 +1,9 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Button, Modal, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link} from 'react-router-dom';
-// import {axios} from 'axios';
+
+import axios from 'axios';
 
 function SignUp() {
     
@@ -11,23 +12,74 @@ function SignUp() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    // const [formData, setFormData] = useState({
+    //     username: "",
+    //     password: "",
+    //     confirmed_password: "",
+    //     date_of_birth: "",
+    //     email: "",
+
+    // })
+
     const [username, setUsername] = useState("");
-    const [pass1, setPass1] = useState("");
-    const [pass2, setPass2] = useState("");
-    const [date_of_birth, setDateOfBirth] = useState("");
-    const [email, setEmail] = useState("");
+    const [origPassword, setOrigPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [dateOfBirth, setDateOfBirth] = useState("");
+    const [userEmail, setUserEmail] = useState("");
 
     const [validated, setValidated] = useState(false);
+    // const [subForm, setSubForm] = useState(false);
 
 
 
-    const handleSubmit = (e) => {
+  
+    const api_url = ("/api/make-user/");
+    
 
-        console.log(e.currentTarget);
-        setTimeout(function() {console.log(e.currentTarget)}, 1000);
+
+
+    const handleSubmit = e => {
+        e.preventDefault();
+
+        async function postUser(){
+            const result = await axios.post(api_url, {
+                username: username,
+                password: origPassword,
+                confirmed_password: confirmPassword,
+                date_of_birth: dateOfBirth, 
+                email: userEmail, 
+            }).then((response) => {
+                console.log(response);
+
+            }, (error) => {
+                console.log(error);
+
+            });
+        };
+        
         setValidated(true);
+        postUser();
+
+    //     async function postUser () {
+    //         const result = await axios.post(api_url, user);
+    //     };
+
+
+
+    //     postUser();
 
     };
+
+
+    // const handleStateUpdate = (e) => {
+
+    //     console.log([e.target.name], e.target.value);
+    //     setFormData({
+    //         ...formData,
+    //         [e.target.name]: e.target.value
+    //     });
+
+    // };
 
 
 
@@ -42,7 +94,7 @@ function SignUp() {
                 </Modal.Header>
 
                 <Modal.Body>
-                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                    <Form noValidate validated={validated}  onSubmit={handleSubmit}>
 
                         {/* Username Form Input */}
                         <Form.Group controlId="formUsername">
@@ -66,8 +118,8 @@ function SignUp() {
                                 required
                                 type="password"
                                 placeholder="Enter Password"
-                                value={pass1}
-                                onChange={(e) => {setPass1(e.target.value)}}
+                                value={origPassword}
+                                onChange={(e) => {setOrigPassword(e.target.value)}}
                             />
                         </Form.Group>
 
@@ -78,8 +130,8 @@ function SignUp() {
                                 required
                                 type="password"
                                 placeholder="Confirm Password"
-                                value={pass2}
-                                onChange={(e) => {setPass2(e.target.value)}}
+                                value={confirmPassword}
+                                onChange={(e) => {setConfirmPassword(e.target.value)}}
                             />
                         </Form.Group>
 
@@ -90,7 +142,7 @@ function SignUp() {
                                 required
                                 type="date"
                                 placeholder="Select Date of Birth"
-                                value={date_of_birth}
+                                value={dateOfBirth}
                                 onChange={(e) => {setDateOfBirth(e.target.value)}}
                             />
                         </Form.Group>
@@ -101,8 +153,8 @@ function SignUp() {
                                 required
                                 type="email"
                                 placeholder="Enter email"
-                                value={email}
-                                onChange={(e) => {setEmail(e.target.value)}}
+                                value={userEmail}
+                                onChange={(e) => {setUserEmail(e.target.value)}}
                             />
                             <Form.Text className="text-muted">
                                 We'll never share your email with anyone else.
@@ -125,7 +177,7 @@ function SignUp() {
 
 
                        
-                        <Button variant="primary" type="submit"> 
+                        <Button variant="primary" type="submit" disabled={validated}> 
                             Create Account 
                         </Button> 
 

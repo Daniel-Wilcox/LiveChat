@@ -104,7 +104,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     user_icon = models.ImageField(
         _('User icon'),
         upload_to=user_icon_path,
-        default='default_user.png',
+        default='default_user.jpeg',
     )
 
     is_hosting = models.BooleanField(default=False)  # hosting a chatroom

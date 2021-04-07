@@ -1,15 +1,27 @@
 import Navigation from './Navigation'
 import {useState, useEffect} from 'react'
-import { useParams} from 'react-router-dom'
 // import noUserProfilePage from './noUserProfilePage'
+import { useParams } from 'react-router-dom'
+import axios from 'axios'
+import Image from 'react-bootstrap/Image'
 
+function UserProfilePage(props) {
 
-const UserProfilePage = (props) => {
+    const myStyles = {
+        profile_icon: {
+            width: "30%",
+        },
+    };
 
-    // const validUser = false;
+    
+
+    
 
     const [validUser, setValidUser] = useState(false);
-    const { params } = useParams();
+
+    const myParams = useParams();
+    const [urlUsername, setUrlUsername] = useState(myParams.username);
+    
 
     const [userData, setUserData] = useState({
         "username": "",
@@ -20,61 +32,23 @@ const UserProfilePage = (props) => {
         "is_hosting": false,
     });
 
-    // const api_url = ("http://localhost:8000/api/user/"+props.match.params.username);
-    const api_url = ("http://localhost:8000/api/user/"+params.username);
-    
-    
-
-    // useEffect(() => {
-    //     fetch(api_url)
-    //         .then(data => {
-    //             return data.json();
-    //         })
-    //         .then(data => {
-    //             setUserData(data);
-    //             setValidUser(true);
-    //         })
-    //         .catch(err => {
-    //             setValidUser(false);
-    //         });
-    // }, [api_url]);
-
-    // function getUserProfileInfo() {
-
-    // };
+    const api_url = ("/api/user/"+urlUsername);
 
 
-    // const UserProfile = () => {
-    //     return (
-    //         <>
-    //             <Navigation />
-    //             <br />
-    //             <br />
-    //             <br />
-    //             <br />
-    //             <br />
-    //             <br />
-    //             <h1> Welcome to {props.match.params.username}'s profile page! 😄  </h1>
-    //         </>
+    useEffect(() => {
 
-    //     );
-
-    // };
-
-    // const noUserFound () {
-    //     return (
-    //         <>
-    //             <Navigation />
-    //             <br />
-    //             <br />
-    //             <br />
-    //             <br />
-    //             <br />
-    //             <br />
-    //             <h1> Username {props.match.params.username} does not seem to exist 😢  </h1>
-    //         </>
-    //     );
-    // };
+        const fetchData = async () => { 
+            const result = await axios(api_url);
+            setUserData(result.data);
+            setValidUser(true);
+        }
+        fetchData();
+        
+        return () => {
+            setValidUser(false);
+            setUrlUsername("");
+        }
+    }, [api_url]);
 
 
     return (
@@ -87,7 +61,22 @@ const UserProfilePage = (props) => {
                 <br />
                 <br />
                 <br />
-                <h1> Welcome to {props.match.params.username}'s profile page! 😄  </h1>
+                
+                
+                <center>
+                    <h1> Welcome to {urlUsername}'s profile page! 😄  </h1>
+                    <Image src={userData.user_icon} alt={`${urlUsername}'s profile icon`} style={myStyles.profile_icon} roundedCircle />
+                    <br />
+                    <br />
+                    <br />
+                    <h3>{`${urlUsername}'s bio:`}</h3>
+                    <br />
+                
+                    <p> {userData.user_bio} </p>
+                </center>
+
+                
+
             </>
         ) : (
             <>
@@ -98,11 +87,13 @@ const UserProfilePage = (props) => {
                 <br />
                 <br />
                 <br />
-                <h1> Username {props.match.params.username} does not seem to exist 😢  </h1>
+                <center>
+                    <h1> Username {urlUsername} does not seem to exist 😢  </h1>
+                </center>
             </>
-            )
-        );
-
+        )
+    );
+        
 }
 
 export default UserProfilePage

@@ -1,12 +1,13 @@
 from django.urls import path
 
 # , CreateUserView
-from .views import UserProfileView, GetPublicUserProfile, CheckUserEmailExists
+from .views import UserProfileView, GetPublicUserProfile, CheckUserEmailExists, SignUpUser
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('', UserProfileView.as_view()),
     path('user/<str:userPage>', GetPublicUserProfile),
+    path('make-user', SignUpUser),
 
     # userEmail will come in the form test@email instead of test@email.com
     path('email/<str:userEmail>', CheckUserEmailExists),

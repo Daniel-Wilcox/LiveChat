@@ -20,8 +20,32 @@ class UserProfilePageSerializer(serializers.ModelSerializer):
                   'date_joined', 'is_active', 'is_hosting']
 
 
-class CreateUserSerializer(serializers.ModelSerializer):
+class RegisterUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        style={'input_type': 'password'}, write_only=True)
 
     class Meta:
         model = UserProfile
-        fields = ('username', 'email', 'date_of_birth', 'user_bio')
+        fields = ['username', 'password',
+                  'confirmed_password', 'date_of_birth', 'email']
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
+
+    def create(self, validated_data):
+        user = UserProfile(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            date_of_birth=validated_data['date_of_birth'],
+        )
+        password = validated_data['password']
+        confirmed_password = validated_data['confirmed_password']
+
+        if password != confirmed_password:
+            raise serializers.ValidationError(
+                {'password': 'Passwords must match'})
+
+        user.set_password(password)
+        user.save()
+        UserProfile.objects.create(user=user)
+        return user

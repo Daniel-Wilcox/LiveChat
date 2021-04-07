@@ -11,7 +11,7 @@ from myUsers.permission import PublicViewPermissions
 
 
 # Users
-from myUsers.serializers import UserProfileSerializer, CreateUserSerializer, UserProfilePageSerializer
+from myUsers.serializers import UserProfileSerializer, RegisterUserSerializer, UserProfilePageSerializer
 from myUsers.models import UserProfile
 
 
@@ -41,6 +41,24 @@ def GetPublicUserProfile(request, userPage):
         serializer_class = UserProfilePageSerializer(userPage)
         return Response(serializer_class.data, status=status.HTTP_200_OK)
     return Response({"bad request method": "only get request method"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST', ])
+@permission_classes([PublicViewPermissions])
+def SignUpUser(request):
+
+    if request.method == 'POST':
+        serializer = RegisterUserSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            user = serializer.save()
+            data['response'] = "Successfully registered new user"
+            data['username'] = user.username
+            data['email'] = user.email
+            data['date_of_birth'] = user.date_of_birth
+        else:
+            data = serializer.errors
+        return Response(data)
 
 
 @api_view(['GET', ])

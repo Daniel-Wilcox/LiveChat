@@ -12,9 +12,9 @@ function App() {
   return (
     <div className="container">
         <Router>
-            <Route exact path="/" render = {HomePage} />
-            <Route exact path="/en/about" render = {aboutPage} />
-            <Route exact path="/:username" render={UserProfilePage} />
+            <Route exact path="/" component = {HomePage} />
+            <Route exact path="/en/about" component = {aboutPage} />
+            <Route exact path="/:username" component={UserProfilePage} />
         </Router>
     </div>
   );
