@@ -1,25 +1,20 @@
-import {useState, useEffect} from 'react';
-import {Button, Modal, Form } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {Link} from 'react-router-dom';
+import {useState} from 'react'
+import {Button, Modal, Form } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import {Link, useHistory} from 'react-router-dom'
 
-import axios from 'axios';
+import axios from 'axios'
+
+// axios.defaults.proxy.host = "http://localhost"
+// axios.defaults.proxy.port = "8000"
 
 function SignUp() {
     
+    const history = useHistory();
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
-    // const [formData, setFormData] = useState({
-    //     username: "",
-    //     password: "",
-    //     confirmed_password: "",
-    //     date_of_birth: "",
-    //     email: "",
-
-    // })
 
     const [username, setUsername] = useState("");
     const [origPassword, setOrigPassword] = useState("");
@@ -28,16 +23,18 @@ function SignUp() {
     const [userEmail, setUserEmail] = useState("");
 
     const [validated, setValidated] = useState(false);
-    // const [subForm, setSubForm] = useState(false);
-
-
-
-  
-    const api_url = ("/api/make-user/");
+    const api_url = ("http://localhost:8000/api/user-register");
     
 
 
-
+    // {
+    //     "username": "myUser",
+    //     "password": "origPassword",
+    //     "confirmed_password": "origPassword",
+    //     "date_of_birth": "2021-03-01",
+    //     "email": "userEmail@mail.com"
+    //     }
+        
     const handleSubmit = e => {
         e.preventDefault();
 
@@ -47,26 +44,40 @@ function SignUp() {
                 password: origPassword,
                 confirmed_password: confirmPassword,
                 date_of_birth: dateOfBirth, 
-                email: userEmail, 
+                email: userEmail
             }).then((response) => {
                 console.log(response);
+                console.log(response.status);
+                console.log(response.data.username);
 
-            }, (error) => {
-                console.log(error);
+                if (response.status === 201){
+                    setShow(false);                    
+                    history.push(`/${response.data.username}`);
 
+
+                };
+                
+            }).catch((error) => {
+                console.error(error);
             });
+
+            return result
+
+            
+           
         };
         
         setValidated(true);
         postUser();
+        // .then((result) => {
+        //     if (result.status === '201') {
+        //         console.log('This is created');
 
-    //     async function postUser () {
-    //         const result = await axios.post(api_url, user);
-    //     };
+        //     }else{
+        //         console.warn('This is not created');
 
-
-
-    //     postUser();
+        //     };
+        // });
 
     };
 

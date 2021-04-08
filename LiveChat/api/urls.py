@@ -7,7 +7,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 urlpatterns = [
     path('', UserProfileView.as_view()),
     path('user/<str:userPage>', GetPublicUserProfile),
-    path('make-user', SignUpUser),
+    path('user-register', SignUpUser),
 
     # userEmail will come in the form test@email instead of test@email.com
     path('email/<str:userEmail>', CheckUserEmailExists),

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from myUsers.permission import PublicViewPermissions
 
@@ -40,25 +40,26 @@ def GetPublicUserProfile(request, userPage):
     if request.method == 'GET':
         serializer_class = UserProfilePageSerializer(userPage)
         return Response(serializer_class.data, status=status.HTTP_200_OK)
-    return Response({"bad request method": "only get request method"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"bad request method": "only GET request method"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST', ])
-@permission_classes([PublicViewPermissions])
+@permission_classes([AllowAny])
 def SignUpUser(request):
 
     if request.method == 'POST':
         serializer = RegisterUserSerializer(data=request.data)
         data = {}
         if serializer.is_valid():
-            user = serializer.save()
+            user = serializer.save(request.data)
             data['response'] = "Successfully registered new user"
             data['username'] = user.username
-            data['email'] = user.email
-            data['date_of_birth'] = user.date_of_birth
+            return Response(data, status=status.HTTP_201_CREATED)
         else:
             data = serializer.errors
-        return Response(data)
+            return Response(data, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+    return Response({"bad request method": "only POST request method"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', ])

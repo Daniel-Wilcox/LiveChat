@@ -4,7 +4,6 @@
 import { Button } from 'react-bootstrap';
 import {Link} from 'react-router-dom'
 // import {LinkContainer} from 'react-router-bootstrap'
-// import { axios } from 'axios'
 import Navigation  from "./Navigation";
 import SignUp from './SignUp';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,7 +12,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const HomePage = () => {
 
-    // const api_url = 'http://localhost:8000/';
     const myStyle = {
 
 

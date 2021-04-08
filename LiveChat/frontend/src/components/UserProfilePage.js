@@ -2,8 +2,13 @@ import Navigation from './Navigation'
 import {useState, useEffect} from 'react'
 // import noUserProfilePage from './noUserProfilePage'
 import { useParams } from 'react-router-dom'
+
 import axios from 'axios'
+
+
 import Image from 'react-bootstrap/Image'
+
+
 
 function UserProfilePage(props) {
 
@@ -12,6 +17,11 @@ function UserProfilePage(props) {
             width: "30%",
         },
     };
+
+    // axios.defaults.proxy.host = "http://localhost";
+    // axios.defaults.proxy.port = "8000";
+
+    
 
     
 

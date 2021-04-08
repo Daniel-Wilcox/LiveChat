@@ -21,18 +21,15 @@ class UserProfilePageSerializer(serializers.ModelSerializer):
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
+    confirmed_password = serializers.CharField(
         style={'input_type': 'password'}, write_only=True)
 
     class Meta:
         model = UserProfile
         fields = ['username', 'password',
                   'confirmed_password', 'date_of_birth', 'email']
-        extra_kwargs = {
-            'password': {'write_only': True},
-        }
 
-    def create(self, validated_data):
+    def save(self, validated_data):
         user = UserProfile(
             username=validated_data['username'],
             email=validated_data['email'],
@@ -47,5 +44,4 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 
         user.set_password(password)
         user.save()
-        UserProfile.objects.create(user=user)
         return user
